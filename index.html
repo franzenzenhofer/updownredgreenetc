@@ -34,16 +34,23 @@
             font-size: calc(10vh + 2vw);
         }
         #icons {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            height: 50vh;
-        }
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 50vh;
+}
+
+#arrows, #colors {
+    display: flex;
+    justify-content: center;
+}
+
         .icon {
-            font-size: calc(3vh + 1vw);
-            cursor: pointer;
-            margin: 1vh 1vw;
-        }
+    font-size: calc(5vh + 2vw);  /* Increased size */
+    cursor: pointer;
+    margin: 1vh 1vw;
+}
+
         #scoreWrapper {
   position: fixed;
   bottom: 0;
@@ -108,7 +115,10 @@
     <div id="highlightedArea">
         <div id="highlightedWord"></div>
     </div>
-    <div id="icons"></div>
+    <div id="icons">
+        <div id="arrows"></div>
+        <div id="colors"></div>
+    </div>
     <div id="scoreWrapper">
         <div id="score">Score: 0</div>
         <div id="highScore"></div>
@@ -182,11 +192,13 @@ document.getElementById('highScore').innerText = `High Score: ${highScore}`;
             };
     
             const iconsArea = document.getElementById('icons');
-    
-            for (const word in wordToIcon) {
-                const iconElement = document.createElement('div');
-                iconElement.className = 'icon';
-                iconElement.innerText = wordToIcon[word];
+            const arrowsArea = document.getElementById('arrows');
+        const colorsArea = document.getElementById('colors');
+        for (const word in wordToIcon) {
+            const iconElement = document.createElement('div');
+            iconElement.className = 'icon';
+            iconElement.innerText = wordToIcon[word];
+
                 iconElement.addEventListener('click', () => {
                     clearTimeout(timer);
                     if (wordToIcon[word] === wordToIcon[highlightedWord]) {
@@ -201,7 +213,12 @@ document.getElementById('highScore').innerText = `High Score: ${highScore}`;
 updateHighScore();
                     newRound();
                 });
-                iconsArea.appendChild(iconElement);
+                
+                if (['Left', 'Up', 'Down', 'Right'].includes(word)) {
+                arrowsArea.appendChild(iconElement);
+            } else {
+                colorsArea.appendChild(iconElement);
+            }
             }
     
             newRound();
