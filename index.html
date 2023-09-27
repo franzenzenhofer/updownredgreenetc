@@ -252,7 +252,7 @@ if (!isNaN(tsParam)) {
   
   highScoreElement.innerText = `Your High Score: ${highScore}`;
   
-  if (true) { // (navigator.share && highScore > shareThreshold) {
+  if (navigator.share && highScore > shareThreshold) {
     highScoreElement.innerHTML = highScoreElement.innerHTML + " - <u>Share</u>";
     highScoreElement.onclick = () => shareHighScore(highScore, todayHighScore);
   } 
