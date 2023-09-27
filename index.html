@@ -228,18 +228,18 @@ if (!isNaN(tsParam)) {
     // Today's high score
     let todayHighScore = parseInt(localStorage.getItem(`todayHighScore_${today}`)) || 0;
 
-    // Update today's high score
     const updateTodayHighScore = () => {
-        let todayHighScoreElement = document.getElementById('todayHighScore');
-        if(score > todayHighScore) {
-            todayHighScore = score;
-            localStorage.setItem(`todayHighScore_${today}`, todayHighScore);
-        }
-        todayHighScoreElement.innerText = `Your highest score today: ${todayHighScore}`;
-        if (!isNaN(hsParam)&&todayHighScore > hsParam) {
-            todayHighScoreElement.innerText =  todayHighScoreElement.innerText+" 🏆";
-                    }
-    };
+    let todayHighScoreElement = document.getElementById('todayHighScore');
+    if(score > todayHighScore) {
+        todayHighScore = score;
+        localStorage.setItem(`todayHighScore_${today}`, todayHighScore);
+    }
+    todayHighScoreElement.innerText = `Your highest score today: ${todayHighScore}`;
+    if (navigator.share && (todayHighScore > shareThreshold)) {
+        todayHighScoreElement.innerHTML = todayHighScoreElement.innerText + " 🏆 - <u>Share</u>";
+        todayHighScoreElement.onclick = () => shareHighScore(highScore, todayHighScore);
+    }
+};
 
     document.getElementById('highScore').innerText = `Your High Score: ${highScore}`;
     document.getElementById('todayHighScore').innerText = `Your highest score today: ${todayHighScore}`;
@@ -254,10 +254,7 @@ if (!isNaN(tsParam)) {
   
   highScoreElement.innerText = `Your High Score: ${highScore}`;
   
-  if (navigator.share && highScore > shareThreshold) {
-    highScoreElement.innerHTML = highScoreElement.innerHTML + " - <u>Share</u>";
-    highScoreElement.onclick = () => shareHighScore(highScore, todayHighScore);
-  } 
+
   
   highScoreElement.style.display = 'block';
 };
