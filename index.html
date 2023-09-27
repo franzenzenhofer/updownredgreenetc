@@ -155,9 +155,21 @@
 
 
     <script>
+const getURLParameter = (name) => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+};
+
+
         (() => {
             let highScore = parseInt(localStorage.getItem('highScore')) || 0;
-document.getElementById('highScore').innerText = `High Score: ${highScore}`;
+            let shareThreshold = 14;
+const hsParam = parseInt(getURLParameter('hs'));
+if (!isNaN(hsParam)) {
+    shareThreshold = hsParam;
+}
+
+document.getElementById('highScore').innerText = `Your High Score: ${highScore}`;
             const wordToIcon = {
                 'Left': '⬅️',
                 'Up': '⬆️',
@@ -205,10 +217,10 @@ document.getElementById('highScore').innerText = `High Score: ${highScore}`;
     localStorage.setItem('highScore', highScore);
   }
   
-  highScoreElement.innerText = `High Score: ${highScore}`;
+  highScoreElement.innerText = `Your High Score: ${highScore}`;
   
-  if (navigator.share && highScore > 14) {
-    highScoreElement.innerHTML = highScoreElement.innerHTML + "- <u>Share</u>";
+  if (navigator.share && highScore > shareThreshold) {
+    highScoreElement.innerHTML = highScoreElement.innerHTML + " - <u>Share</u>";
     highScoreElement.onclick = () => shareHighScore(highScore);
   } 
   
