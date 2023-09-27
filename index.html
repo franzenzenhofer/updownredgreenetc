@@ -4,10 +4,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>UpDownRedGreenEtc Game by Franz Enzenhofer</title>
+    <title>Up-Down-Red-Green-Etc Game by Franz Enzenhofer</title>
     <meta name="description" content="UpDownRedGreenEtc is a fun game where you match words with icons. Harder than it sounds. This game is licensed under the MIT License.">
     <meta name="author" content="Franz Enzenhofer ChatGpt">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta property="og:image" content="/share.png">
     <style>
         body {
             font-family: Verdana, sans-serif;
@@ -163,7 +164,7 @@ const getURLParameter = (name) => {
 
         (() => {
             let highScore = parseInt(localStorage.getItem('highScore')) || 0;
-            let shareThreshold = 14;
+            let shareThreshold = 9;
 const hsParam = parseInt(getURLParameter('hs'));
 if (!isNaN(hsParam)) {
     shareThreshold = hsParam;
@@ -185,8 +186,8 @@ document.getElementById('highScore').innerText = `Your High Score: ${highScore}`
                
   if (navigator.share) {
     navigator.share({
-      title: 'My High Score in UpDownRedGreenEtc',
-      text: `My high score is ${score}. Can you beat me?`,
+      title: 'My High Score in Up-Down-Red-Green-Etc Game',
+      text: `My high score in Up-Down-Red-Green-Etc is ${score}. Can you beat me?`,
       url: `https://updownredgreenetc.franzai.com/?hs=${score}`,
     });
   }
@@ -264,11 +265,11 @@ document.getElementById('highScore').innerText = `Your High Score: ${highScore}`
                     clearTimeout(timer);
                     if (wordToIcon[word] === wordToIcon[highlightedWord]) {
                         score++;
-                        timeRemaining *= 0.9;
+                        timeRemaining *= 0.92;
                         document.getElementById('explainer').style.display = 'none'; // Hide explainer
                     } else {
                         score = Math.max(0, score - 1);
-                        timeRemaining = 10000 * Math.pow(0.9, score);
+                        timeRemaining = 10000 * Math.pow(0.92, score);
                         lossIndicator();
                     }
                     scoreElement.innerText = `Score: ${score}`;
