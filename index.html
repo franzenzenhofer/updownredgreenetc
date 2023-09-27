@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UpDownRedGreenEtc Game by Franz Enzenhofer</title>
+    <meta name="description" content="UpDownRedGreenEtc is a fun game where you match words with icons. Harder than it sounds. This game is licensed under the MIT License.">
+    <meta name="author" content="Franz Enzenhofer ChatGpt">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <style>
+        body {
+            font-family: Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+        }
+        .loss-indicator {
+            filter: brightness(50%);
+            animation: shake 0.5s linear;
+        }
+        #highlightedArea {
+            width: 100vw;
+            height: 75vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #highlightedWord {
+            font-size: calc(10vh + 2vw);
+        }
+        #icons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            height: 25vh;
+        }
+        .icon {
+            font-size: calc(3vh + 1vw);
+            cursor: pointer;
+            margin: 1vh 1vw;
+        }
+        #scoreWrapper {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+}
+
+#score {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+#highScore {
+  font-size: 10px;
+  font-weight: normal;
+}
+
+
+
+
+        @keyframes shake {
+            0% {
+                transform: translate(0, 0);
+            }
+            10% {
+                transform: translate(-10px, 0);
+            }
+            20% {
+                transform: translate(10px, 0);
+            }
+            30% {
+                transform: translate(-10px, 0);
+            }
+            40% {
+                transform: translate(10px, 0);
+            }
+            50% {
+                transform: translate(-10px, 0);
+            }
+            60% {
+                transform: translate(10px, 0);
+            }
+            70% {
+                transform: translate(-10px, 0);
+            }
+            80% {
+                transform: translate(10px, 0);
+            }
+            90% {
+                transform: translate(-10px, 0);
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="highlightedArea">
+        <div id="highlightedWord"></div>
+    </div>
+    <div id="icons"></div>
+    <div id="scoreWrapper">
+        <div id="score">Score: 0</div>
+        <div id="highScore"></div>
+      </div>
+      
+
+
+    <script>
+        (() => {
+            let highScore = parseInt(localStorage.getItem('highScore')) || 0;
+document.getElementById('highScore').innerText = `High Score: ${highScore}`;
+            const wordToIcon = {
+                'Left': '⬅️',
+                'Up': '⬆️',
+                'Down': '⬇️',
+                'Right': '➡️',
+                'Blue': '🟦',
+                'Red': '🟥',
+                'Yellow': '🟨',
+                'Green': '🟩'
+            };
+    
+            const words = Object.keys(wordToIcon);
+            const colors = ['blue', 'red', 'orange', 'green'];
+            let score = 0;
+            let highlightedWord = '';
+            let timeRemaining = 10000;
+            let timer;
+    
+            const scoreElement = document.getElementById('score');
+    
+            const lossIndicator = () => {
+                document.body.classList.add("loss-indicator");
+                setTimeout(() => {
+                    document.body.classList.remove("loss-indicator");
+                }, 200);
+            };
+    
+            const updateHighScore = () => {
+    let highScoreElement = document.getElementById('highScore');
+    if(score > highScore) {
+        highScore = score;
+        localStorage.setItem('highScore', highScore);
+    }
+    highScoreElement.innerText = `High Score: ${highScore}`;
+    highScoreElement.style.display = 'block';
+};
+    
+            const newRound = () => {
+                clearTimeout(timer);
+    
+                highlightedWord = words[Math.floor(Math.random() * words.length)];
+                const highlightedArea = document.getElementById('highlightedArea');
+                let bgColor, fontColor;
+                do {
+                    bgColor = colors[Math.floor(Math.random() * colors.length)];
+                    fontColor = colors[Math.floor(Math.random() * colors.length)];
+                } while (bgColor === fontColor);
+    
+                highlightedArea.style.backgroundColor = bgColor;
+                document.getElementById('highlightedWord').innerText = highlightedWord;
+                document.getElementById('highlightedWord').style.color = fontColor;
+    
+                timer = setTimeout(() => {
+                    score = Math.max(0, score - 1);
+                    timeRemaining = 10000 * Math.pow(0.9, score);
+                    lossIndicator();
+                    scoreElement.innerText = `Score: ${score}`;
+                    newRound();
+                }, timeRemaining);
+            };
+    
+            const iconsArea = document.getElementById('icons');
+    
+            for (const word in wordToIcon) {
+                const iconElement = document.createElement('div');
+                iconElement.className = 'icon';
+                iconElement.innerText = wordToIcon[word];
+                iconElement.addEventListener('click', () => {
+                    clearTimeout(timer);
+                    if (wordToIcon[word] === wordToIcon[highlightedWord]) {
+                        score++;
+                        timeRemaining *= 0.9;
+                    } else {
+                        score = Math.max(0, score - 1);
+                        timeRemaining = 10000 * Math.pow(0.9, score);
+                        lossIndicator();
+                    }
+                    scoreElement.innerText = `Score: ${score}`;
+updateHighScore();
+                    newRound();
+                });
+                iconsArea.appendChild(iconElement);
+            }
+    
+            newRound();
+        })();
+    </script>    
+</body>
+</html>
