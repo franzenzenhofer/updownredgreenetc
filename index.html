@@ -40,6 +40,13 @@
     height: 50vh;
 }
 
+#explainer {
+    font-size: 12px;
+    text-align: center;
+    display: block; /* Initially set to block */
+}
+
+
 #arrows, #colors {
     display: flex;
     justify-content: center;
@@ -132,7 +139,9 @@
     <div id="icons">
         <div id="arrows"></div>
         <div id="colors"></div>
-    </div>
+        <div id="explainer">Click the icon that matches the written word.</div>
+      </div>
+      
     <div id="scoreWrapper">
         <div id="score">Score: 0</div>
         <div id="highScore"></div>
@@ -219,6 +228,7 @@ document.getElementById('highScore').innerText = `High Score: ${highScore}`;
                     if (wordToIcon[word] === wordToIcon[highlightedWord]) {
                         score++;
                         timeRemaining *= 0.9;
+                        document.getElementById('explainer').style.display = 'none'; // Hide explainer
                     } else {
                         score = Math.max(0, score - 1);
                         timeRemaining = 10000 * Math.pow(0.9, score);
