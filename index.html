@@ -175,9 +175,11 @@ const getURLParameter = (name) => {
             let shareThreshold = 9;
 const hsParam = parseInt(getURLParameter('hs'));
 const tsParam = parseInt(getURLParameter('ts'));
+let pokalthreshold = 100;
 
 if (!isNaN(tsParam)) {
     shareThreshold = tsParam;
+    pokalthreshold = tsParam;
 } else if (!isNaN(hsParam)) {
     shareThreshold = hsParam;
 }
@@ -235,8 +237,12 @@ if (!isNaN(tsParam)) {
         localStorage.setItem(`todayHighScore_${today}`, todayHighScore);
     }
     todayHighScoreElement.innerText = `Your highest score today: ${todayHighScore}`;
+    if(todayHighScore > pokalthreshold) {
+        todayHighScoreElement.innerHTML = todayHighScoreElement.innerText + " 🏆";
+    }
+
     if (navigator.share && (todayHighScore > shareThreshold)) {
-        todayHighScoreElement.innerHTML = todayHighScoreElement.innerText + " 🏆 - <u>Share</u>";
+        todayHighScoreElement.innerHTML = todayHighScoreElement.innerText + "- <u>Share</u>";
         todayHighScoreElement.onclick = () => shareHighScore(highScore, todayHighScore);
     }
 };
