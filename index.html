@@ -265,11 +265,11 @@ document.getElementById('highScore').innerText = `Your High Score: ${highScore}`
                     clearTimeout(timer);
                     if (wordToIcon[word] === wordToIcon[highlightedWord]) {
                         score++;
-                        timeRemaining *= 0.92;
+                        timeRemaining *= 0.91;
                         document.getElementById('explainer').style.display = 'none'; // Hide explainer
                     } else {
                         score = Math.max(0, score - 1);
-                        timeRemaining = 10000 * Math.pow(0.92, score);
+                        timeRemaining = 10000 * Math.pow(0.91, score);
                         lossIndicator();
                     }
                     scoreElement.innerText = `Score: ${score}`;
