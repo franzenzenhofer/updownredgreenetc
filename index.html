@@ -132,6 +132,12 @@
   text-decoration: none;
 }
 
+#todayHighScore {
+            font-size: 12px;
+            font-weight: normal;
+            white-space: nowrap;
+        }
+
 
 
     </style>
@@ -148,7 +154,9 @@
       
     <div id="scoreWrapper">
         <div id="score">Score: 0</div>
+        <div id="todayHighScore"></div>
         <div id="highScore"></div>
+        
 
       </div>
       <div id="github"><a href="https://github.com/franzenzenhofer/updownredgreenetc" target="_blank">Github</a></div>
@@ -166,11 +174,15 @@ const getURLParameter = (name) => {
             let highScore = parseInt(localStorage.getItem('highScore')) || 0;
             let shareThreshold = 9;
 const hsParam = parseInt(getURLParameter('hs'));
+const tsParam = parseInt(getURLParameter('ts'));
 if (!isNaN(hsParam)) {
     shareThreshold = hsParam;
 }
+if (!isNaN(tsParam)) {
+    shareThreshold = tsParam;
+}
 
-document.getElementById('highScore').innerText = `Your High Score: ${highScore}`;
+
             const wordToIcon = {
                 'Left': '⬅️',
                 'Up': '⬆️',
@@ -182,13 +194,13 @@ document.getElementById('highScore').innerText = `Your High Score: ${highScore}`
                 'Green': '🟩'
             };
 
-            const shareHighScore = (score) => {
+            const shareHighScore = (score, todayscore) => {
                
   if (navigator.share) {
     navigator.share({
       title: 'My High Score in Up-Down-Red-Green-Etc Game',
-      text: `😎 My high score in Up-Down-Red-Green-Etc is ${score}. Can you beat me? Click the icon that matches the written word.`,
-      url: `https://updownredgreenetc.franzai.com/?hs=${score}`,
+      text: `😎 My high score in Up-Down-Red-Green-Etc is ${score}. Today my best score is ${todayscore}. Can you beat me? Just click the icons that matches the written words.`,
+      url: `https://updownredgreenetc.franzai.com/?hs=${score}&ts=${todayscore}`,
     });
   }
 };
@@ -209,6 +221,26 @@ document.getElementById('highScore').innerText = `Your High Score: ${highScore}`
                     document.body.classList.remove("loss-indicator");
                 }, 200);
             };
+
+
+                // Today's date in 'YYYY-MM-DD' format
+    const today = new Date().toISOString().slice(0, 10);
+    
+    // Today's high score
+    let todayHighScore = parseInt(localStorage.getItem(`todayHighScore_${today}`)) || 0;
+
+    // Update today's high score
+    const updateTodayHighScore = () => {
+        let todayHighScoreElement = document.getElementById('todayHighScore');
+        if(score > todayHighScore) {
+            todayHighScore = score;
+            localStorage.setItem(`todayHighScore_${today}`, todayHighScore);
+        }
+        todayHighScoreElement.innerText = `Your highest score today: ${todayHighScore}`;
+    };
+
+    document.getElementById('highScore').innerText = `Your High Score: ${highScore}`;
+    document.getElementById('todayHighScore').innerText = `Your highest score today: ${todayHighScore}`;
     
             const updateHighScore = () => {
   let highScoreElement = document.getElementById('highScore');
@@ -220,13 +252,19 @@ document.getElementById('highScore').innerText = `Your High Score: ${highScore}`
   
   highScoreElement.innerText = `Your High Score: ${highScore}`;
   
-  if (navigator.share && highScore > shareThreshold) {
+  if (true) { // (navigator.share && highScore > shareThreshold) {
     highScoreElement.innerHTML = highScoreElement.innerHTML + " - <u>Share</u>";
-    highScoreElement.onclick = () => shareHighScore(highScore);
+    highScoreElement.onclick = () => shareHighScore(highScore, todayHighScore);
   } 
   
   highScoreElement.style.display = 'block';
 };
+
+    // Update both high scores
+    const updateHighScores = () => {
+        updateHighScore();
+        updateTodayHighScore();
+    };
 
 let lastCombination = '';
 
@@ -277,7 +315,7 @@ const newRound = () => {
                         lossIndicator();
                     }
                     scoreElement.innerText = `Score: ${score}`;
-updateHighScore();
+                    updateHighScores();
                     newRound();
                 });
                 
