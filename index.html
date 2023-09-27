@@ -242,7 +242,7 @@ if (!isNaN(tsParam)) {
     }
 
     if (navigator.share && (todayHighScore > shareThreshold)) {
-        todayHighScoreElement.innerHTML = todayHighScoreElement.innerText + "- <u>Share</u>";
+        todayHighScoreElement.innerHTML = todayHighScoreElement.innerText + " - <u>Share</u>";
         todayHighScoreElement.onclick = () => shareHighScore(highScore, todayHighScore);
     }
 };
