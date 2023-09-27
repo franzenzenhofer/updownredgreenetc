@@ -175,15 +175,14 @@ const getURLParameter = (name) => {
             let shareThreshold = 9;
 const hsParam = parseInt(getURLParameter('hs'));
 const tsParam = parseInt(getURLParameter('ts'));
-if (!isNaN(hsParam)) {
-    shareThreshold = hsParam;
-}
+
 if (!isNaN(tsParam)) {
     shareThreshold = tsParam;
+} else if (!isNaN(hsParam)) {
+    shareThreshold = hsParam;
 }
 
-
-            const wordToIcon = {
+        const wordToIcon = {
                 'Left': '⬅️',
                 'Up': '⬆️',
                 'Down': '⬇️',
@@ -237,6 +236,9 @@ if (!isNaN(tsParam)) {
             localStorage.setItem(`todayHighScore_${today}`, todayHighScore);
         }
         todayHighScoreElement.innerText = `Your highest score today: ${todayHighScore}`;
+        if (!isNaN(hsParam)&&todayHighScore > hsParam) {
+            todayHighScoreElement.innerText =  todayHighScoreElement.innerText+" 🏆";
+                    }
     };
 
     document.getElementById('highScore').innerText = `Your High Score: ${highScore}`;
@@ -315,6 +317,7 @@ const newRound = () => {
                         lossIndicator();
                     }
                     scoreElement.innerText = `Score: ${score}`;
+           
                     updateHighScores();
                     newRound();
                 });
@@ -325,7 +328,7 @@ const newRound = () => {
                 colorsArea.appendChild(iconElement);
             }
             }
-    
+            updateHighScores();
             newRound();
         })();
     </script>    
