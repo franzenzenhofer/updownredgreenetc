@@ -228,30 +228,34 @@ document.getElementById('highScore').innerText = `Your High Score: ${highScore}`
   highScoreElement.style.display = 'block';
 };
 
-    
-            const newRound = () => {
-                clearTimeout(timer);
-    
-                highlightedWord = words[Math.floor(Math.random() * words.length)];
-                const highlightedArea = document.getElementById('highlightedArea');
-                let bgColor, fontColor;
-                do {
-                    bgColor = colors[Math.floor(Math.random() * colors.length)];
-                    fontColor = colors[Math.floor(Math.random() * colors.length)];
-                } while (bgColor === fontColor);
-    
-                highlightedArea.style.backgroundColor = bgColor;
-                document.getElementById('highlightedWord').innerText = highlightedWord;
-                document.getElementById('highlightedWord').style.color = fontColor;
-    
-                timer = setTimeout(() => {
-                    score = Math.max(0, score - 1);
-                    timeRemaining = 10000 * Math.pow(0.9, score);
-                    lossIndicator();
-                    scoreElement.innerText = `Score: ${score}`;
-                    newRound();
-                }, timeRemaining);
-            };
+let lastCombination = '';
+
+const newRound = () => {
+    clearTimeout(timer);
+
+    highlightedWord = words[Math.floor(Math.random() * words.length)];
+    const highlightedArea = document.getElementById('highlightedArea');
+    let bgColor, fontColor;
+    do {
+        bgColor = colors[Math.floor(Math.random() * colors.length)];
+        fontColor = colors[Math.floor(Math.random() * colors.length)];
+    } while (bgColor === fontColor || `${highlightedWord}-${bgColor}-${fontColor}` === lastCombination);
+
+    lastCombination = `${highlightedWord}-${bgColor}-${fontColor}`;
+
+    highlightedArea.style.backgroundColor = bgColor;
+    document.getElementById('highlightedWord').innerText = highlightedWord;
+    document.getElementById('highlightedWord').style.color = fontColor;
+
+    timer = setTimeout(() => {
+        score = Math.max(0, score - 1);
+        timeRemaining = 10000 * Math.pow(0.9, score);
+        lossIndicator();
+        scoreElement.innerText = `Score: ${score}`;
+        newRound();
+    }, timeRemaining);
+};
+
     
             const iconsArea = document.getElementById('icons');
             const arrowsArea = document.getElementById('arrows');
