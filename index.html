@@ -75,7 +75,7 @@
 }
 
 #highScore {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: normal;
   white-space: nowrap;
 }
@@ -130,6 +130,9 @@
   color: black;
   text-decoration: none;
 }
+
+
+
     </style>
 </head>
 <body>
@@ -145,6 +148,7 @@
     <div id="scoreWrapper">
         <div id="score">Score: 0</div>
         <div id="highScore"></div>
+
       </div>
       <div id="github"><a href="https://github.com/franzenzenhofer/updownredgreenetc" target="_blank">Github</a></div>
       
@@ -164,6 +168,18 @@ document.getElementById('highScore').innerText = `High Score: ${highScore}`;
                 'Yellow': '🟨',
                 'Green': '🟩'
             };
+
+            const shareHighScore = (score) => {
+               
+  if (navigator.share) {
+    navigator.share({
+      title: 'My High Score in UpDownRedGreenEtc',
+      text: `My high score is ${score}. Can you beat me?`,
+      url: `https://updownredgreenetc.franzai.com/?hs=${score}`,
+    });
+  }
+};
+
     
             const words = Object.keys(wordToIcon);
             const colors = ['blue', 'red', 'orange', 'green'];
@@ -182,14 +198,23 @@ document.getElementById('highScore').innerText = `High Score: ${highScore}`;
             };
     
             const updateHighScore = () => {
-    let highScoreElement = document.getElementById('highScore');
-    if(score > highScore) {
-        highScore = score;
-        localStorage.setItem('highScore', highScore);
-    }
-    highScoreElement.innerText = `High Score: ${highScore}`;
-    highScoreElement.style.display = 'block';
+  let highScoreElement = document.getElementById('highScore');
+
+  if(score > highScore) {
+    highScore = score;
+    localStorage.setItem('highScore', highScore);
+  }
+  
+  highScoreElement.innerText = `High Score: ${highScore}`;
+  
+  if (navigator.share && highScore > 14) {
+    highScoreElement.innerHTML = highScoreElement.innerHTML + "- <u>Share</u>";
+    highScoreElement.onclick = () => shareHighScore(highScore);
+  } 
+  
+  highScoreElement.style.display = 'block';
 };
+
     
             const newRound = () => {
                 clearTimeout(timer);
